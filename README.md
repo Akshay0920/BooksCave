@@ -61,7 +61,7 @@ BooksCave/
 ### 1. Clone the repository and install the required npm packages
 
 ```bash
-git clone https://github.com/your-username/bookscave.git
+git clone https://github.com/Akshay0920/BooksCave.git
 cd BooksCave
 npm install
 npm install express axios dotenv bcryptjs express-session firebase-admin ejs
