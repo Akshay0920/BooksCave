@@ -97,7 +97,7 @@ Then open your browser and go to:
 ![Cart Page](screenshots/cart.png)
 
 ### 🔹 Order History Page
-![Order History Page](screenshots/.png)
+![Order History Page](screenshots/order-history.png)
 
 ### 🔹 Checkout Page
 ![Checkout Page](screenshots/checkout.png)
