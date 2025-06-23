@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header', { showNavbar: true, currentPage: 'cart' }) %>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= book.title %> - BooksCave</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="container mt-4">
+    <div class="row">
+      
+      <div class="col-md-4 text-center">
+        <img 
+          src="<%= book.thumbnail %>" 
+          alt="Book Cover"
+          style="width: 100%; max-width: 400px; height: auto; object-fit: contain; margin-bottom: 20px;"
+          class="img-fluid rounded shadow-sm" 
+        />
+      </div>
+
+      <!-- Book Info -->
+      <div class="col-md-8">
+        <h2><%= book.title %></h2>
+        <p><strong>Author(s):</strong> <%= book.authors %></p>
+        <p><strong>Publisher:</strong> <%= book.publisher %></p>
+        <p><strong>Published:</strong> <%= book.publishedDate %></p>
+        <p><strong>Pages:</strong> <%= book.pageCount %></p>
+        <p><strong>Categories:</strong> <%= book.categories %></p>
+        <hr />
+        
+        <% 
+          const discountedPrice = (book.price * (1 - (book.discount || 0)/100)).toFixed(2); 
+        %>
+
+        <h4>
+          Price: 
+          <% if(book.discount && book.discount > 0) { %>
+            <span class="text-decoration-line-through text-muted">₹<%= book.price %></span> &nbsp;
+            <span class="text-danger fw-bold">₹<%= discountedPrice %></span>
+            <small class="text-success">(<%= book.discount %>% off)</small>
+          <% } else { %>
+            ₹<%= book.price %>
+          <% } %>
+        </h4>
+
+        
+        <div class="btn-group mt-3" role="group">
+          <!-- Add to Cart button  -->
+          <button 
+            class="btn btn-primary me-2 btn-hover-light-blue"
+            id="addToCartBtn"
+            data-id="<%= book.id %>"
+            data-title="<%- book.title.replace(/"/g, '&quot;') %>"
+            data-authors="<%- book.authors.replace(/"/g, '&quot;') %>"
+            data-thumbnail="<%= book.thumbnail %>"
+            data-price="<%= discountedPrice %>"
+          >
+            Add to Cart
+          </button>
+
+          <!-- Buy Now button -->
+          <form method="POST" action="/buy-now" style="display:inline;">
+            <input type="hidden" name="id" value="<%= book.id %>" />
+            <input type="hidden" name="title" value="<%= book.title %>" />
+            <input type="hidden" name="authors" value="<%= book.authors %>" />
+            <input type="hidden" name="thumbnail" value="<%= book.thumbnail %>" />
+            <input type="hidden" name="price" value="<%= discountedPrice %>" />
+            <button type="submit" class="btn btn-success">Buy Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("addToCartBtn").addEventListener("click", async function () {
+      const btn = this;
+
+      const data = {
+        id: btn.getAttribute("data-id"),
+        title: btn.getAttribute("data-title"),
+        authors: btn.getAttribute("data-authors"),
+        thumbnail: btn.getAttribute("data-thumbnail"),
+        price: parseFloat(btn.getAttribute("data-price"))
+      };
+
+      try {
+        const res = await fetch("/add-to-cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          alert("Book added to cart!");
+        } else {
+          alert("Failed to add book.");
+        }
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        alert("An error occurred.");
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+<style>
+  .success-popup {
+    background-color: #f8f9fa;
+    border: 2px solid #198754;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(25, 135, 84, 0.3);
+    animation: popupFadeIn 0.5s ease-out;
+  }
+
+  @keyframes popupFadeIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="success-popup text-center">
+    <h2 class="text-success">✅ Order Confirmed!</h2>
+    <p class="lead mt-3">
+      Thank you, <strong><%= username %></strong>, for shopping with us.
+    </p>
+    <p>Your order has been successfully placed and is being processed.</p>
+    <a href="/" class="btn btn-outline-primary mt-4">← Back to Store</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

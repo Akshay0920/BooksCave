@@ -1,0 +1,86 @@
+<%- include('partials/header') %>
+
+<div class="container my-4">
+  <h2 class="mb-4">Books</h2>
+  <div class="row row-cols-1 row-cols-md-5 g-3">
+
+    <% books.forEach(book => { 
+      const discountedPrice = (book.price * (1 - (book.discount || 0)/100)).toFixed(2);
+    %>
+      <div class="col">
+        <div class="card book-card h-100 shadow" style="transition: transform 0.2s;" 
+             onmouseover="this.style.transform='scale(1.05)'" 
+             onmouseout="this.style.transform='scale(1)'">
+          <div class="position-relative">
+            <a href="/book/<%= book.id %>">
+              <img src="<%= book.thumbnail %>" class="card-img-top" alt="Book">
+            </a>
+            <% if (book.discount && book.discount > 0) { %>
+              <span class="badge bg-danger position-absolute top-0 end-0 m-2"><%= book.discount %>% OFF</span>
+            <% } %>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">
+              <a href="/book/<%= book.id %>" class="text-decoration-none text-dark">
+                <%= book.title %>
+              </a>
+            </h6>
+            <p class="card-text text-muted"><%= book.authors %></p>
+            
+            <% if (book.discount && book.discount > 0) { %>
+              <p class="fw-bold text-danger mb-1">
+                ₹<span class="text-decoration-line-through"><%= book.price %></span> &nbsp;
+                ₹<%= discountedPrice %>
+              </p>
+            <% } else { %>
+              <p class="fw-bold text-danger">₹<%= book.price %></p>
+            <% } %>
+
+            <form class="add-to-cart-form" method="POST" action="/add-to-cart">
+              <input type="hidden" name="id" value="<%= book.id %>">
+              <input type="hidden" name="title" value="<%= book.title %>">
+              <input type="hidden" name="authors" value="<%= book.authors %>">
+              <input type="hidden" name="thumbnail" value="<%= book.thumbnail %>">
+              <input type="hidden" name="price" value="<%= discountedPrice %>">
+              <button type="submit" class="btn btn-success w-100">Add to Cart</button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    <% }) %>
+
+  </div>
+</div>
+
+<script>
+  // AJAX Add to Cart - no page reload, show alert success/fail
+  document.querySelectorAll('.add-to-cart-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('/add-to-cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert(result.message);
+        } else {
+          alert('Failed to add to cart: ' + (result.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Error adding to cart');
+        console.error(err);
+      }
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

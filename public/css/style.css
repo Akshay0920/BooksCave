@@ -1,0 +1,94 @@
+body.login-page,
+body.signup-page {
+  background: url('/images/bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-signup-container {
+  width: 100%;
+  max-width: 1000px;  
+  padding: 20px;
+}
+
+.login-signup-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-signup-card:hover {
+  transform: translateY(-8px);
+}
+
+.btn-danger {
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #d9534f;
+  transform: scale(1.05);
+}
+
+.popup-info {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  display: none;
+  width: 100px;
+  z-index: 100;
+}
+
+.position-relative:hover .popup-info {
+  display: block;
+}
+
+
+.login-page .login-signup-container {
+  height: auto;
+  min-height: 450px;
+}
+
+.signup-page .login-signup-container {
+  height: auto;
+  min-height: 550px;
+}
+
+
+body.login-page h2,
+body.login-page h3,
+body.login-page h4,
+body.login-page h5,
+body.login-page h6,
+body.signup-page h2,
+body.signup-page h3,
+body.signup-page h4,
+body.signup-page h5,
+body.signup-page h6 {
+  color: rgb(255, 255, 255) !important;
+}
+
+
+body.login-page p,
+body.signup-page p,
+body.login-page .form-group label,
+body.signup-page .form-group label {
+  color: white !important;
+}
+
+

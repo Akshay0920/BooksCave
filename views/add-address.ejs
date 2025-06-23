@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= address ? 'Edit Address' : 'Add Address' %> - BooksCave</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f9ff;
+      margin: 0;
+      padding: 40px 0;
+    }
+    .container {
+      max-width: 720px;
+      background: white;
+      padding: 40px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col-6 {
+      flex: 0 0 48%;
+    }
+    .col-12 {
+      flex: 0 0 100%;
+    }
+    .btn-primary {
+      background-color: #2962ff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: none;
+      border: none;
+      color: #2962ff;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 12px;
+    }
+    .form-footer {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .radio-group {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4" style="text-align:center;"><%= address ? 'Edit Address' : 'Add Address' %></h2>
+    <form method="POST" action="<%= address ? ('/update-address/' + address.id) : '/submit-address' %>">
+      <div class="row">
+        <div class="col-6">
+          <input name="name" placeholder="Name" value="<%= address?.name || '' %>" required />
+        </div>
+        <div class="col-6">
+          <input name="phone" placeholder="10-digit mobile number" value="<%= address?.phone || '' %>" required />
+        </div>
+        <div class="col-6">
+          <input name="pincode" placeholder="Pincode" value="<%= address?.pincode || '' %>" required />
+        </div>
+        <div class="col-6">
+          <input name="locality" placeholder="Locality" value="<%= address?.locality || '' %>" required />
+        </div>
+        <div class="col-12">
+          <textarea name="address" placeholder="Address" rows="2" required><%= address?.address || '' %></textarea>
+        </div>
+        <div class="col-6">
+          <input name="city" placeholder="City/District/Town" value="<%= address?.city || '' %>" required />
+        </div>
+        <div class="col-6">
+          <select name="state" required>
+            <option value="">--Select State--</option>
+            <% const states = [ "Andhra Pradesh", "Telangana", "Maharashtra", "Karnataka", "Delhi", "Gujarat", "West Bengal", "Tamil Nadu", "Uttar Pradesh", "Rajasthan", "Punjab", "Haryana", "Dadra and Nagar Haveli and Daman and Diu", "Bihar", "Odisha", "Kerala", "Assam", "Jharkhand", "Chhattisgarh", "Himachal Pradesh", "Uttarakhand", "Goa", "Jammu and Kashmir", "Meghalaya", "Manipur", "Mizoram", "Nagaland", "Tripura", "Sikkim", "Arunachal Pradesh", "Andaman and Nicobar Islands", "Lakshadweep", "Puducherry", "Chandigarh"]; %>
+            <% states.forEach(s => { %>
+              <option value="<%= s %>" <%= address?.state === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="col-6">
+          <input name="landmark" placeholder="Landmark (Optional)" value="<%= address?.landmark || '' %>" />
+        </div>
+        <div class="col-6">
+          <input name="altPhone" placeholder="Alternate Phone (Optional)" value="<%= address?.altPhone || '' %>" />
+        </div>
+        <div class="col-12">
+          <label>Address Type</label>
+          <div class="radio-group">
+            <label><input type="radio" name="type" value="Home" <%= address?.type === 'Home' || !address ? 'checked' : '' %> /> Home</label>
+            &nbsp;&nbsp;
+            <label><input type="radio" name="type" value="Work" <%= address?.type === 'Work' ? 'checked' : '' %> /> Work</label>
+          </div>
+        </div>
+        <div class="col-12 form-footer">
+          <button type="submit" class="btn-primary"><%= address ? 'Update' : 'Save' %></button>
+          <a href="/profile" class="btn-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

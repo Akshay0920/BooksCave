@@ -1,0 +1,72 @@
+<%- include('partials/header', { showNavbar: true, currentPage: 'cart' }) %>
+
+
+<div class="container my-5">
+  <h2 class="mb-4">Your Cart</h2>
+
+  <% if(cartItems.length === 0) { %>
+    <div class="alert alert-info text-center">
+      Your cart is empty. <a href="/">Continue shopping</a>
+    </div>
+  <% } else { %>
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Book</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          let total = 0; 
+          cartItems.forEach(item => {
+            const discountedPrice = (item.price * (1 - (item.discount || 0)/100));
+            const subtotal = discountedPrice * item.quantity;
+            total += subtotal;
+        %>
+          <tr>
+            <td class="d-flex align-items-center">
+              <img src="<%= item.thumbnail %>" alt="Book" style="max-width: 80px;" class="me-3" />
+              <div>
+                <strong><%= item.title %></strong><br/>
+                <small><%= item.authors %></small>
+              </div>
+            </td>
+            <td>
+              <% if(item.discount && item.discount > 0) { %>
+                <span class="text-decoration-line-through text-muted">₹<%= item.price.toFixed(2) %></span><br/>
+                <span class="text-danger fw-bold">₹<%= discountedPrice.toFixed(2) %></span><br/>
+                <small class="text-success"><%= item.discount %>% off</small>
+              <% } else { %>
+                ₹<%= item.price.toFixed(2) %>
+              <% } %>
+            </td>
+            <td><%= item.quantity %></td>
+            <td>₹<%= subtotal.toFixed(2) %></td>
+            <td>
+              <form method="POST" action="/delete-from-cart" style="display:inline;">
+                <input type="hidden" name="docId" value="<%= item.docId %>">
+                <button class="btn btn-danger btn-sm">Remove</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-end fw-bold">Total:</td>
+          <td colspan="2" class="fw-bold">₹<%= total.toFixed(2) %></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="d-flex justify-content-center my-4">
+      <a href="/checkout" class="btn btn-primary btn-lg">Proceed to Checkout</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

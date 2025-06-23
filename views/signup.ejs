@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+<body class= signup-page>
+<div class="container login-signup-container signup-page">
+  <div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-6">
+     
+      <div class="card p-4 login-signup-card">
+        <div class="text-center mb-4">
+        <h2>Welcome to BooksCave!</h2>
+      </div>
+        <form action="/signup" method="POST">
+          <div class="form-group mb-3 position-relative">
+            <label for="username">Username:</label>
+            <input type="text" name="username" class="form-control" id="username" required placeholder="Enter username">
+            <div class="popup-info">Enter a unique username</div>
+          </div>
+          <div class="form-group mb-3 position-relative">
+            <label for="email">Email:</label>
+            <input type="email" name="email" class="form-control" id="email" required placeholder="Enter email">
+            <div class="popup-info">Enter a valid email address</div>
+          </div>
+          <div class="form-group mb-3 position-relative">
+            <label for="password">Password:</label>
+            <input type="password" name="password" class="form-control" id="password" required placeholder="Enter password">
+            <div class="popup-info">Password must be at least 6 characters</div>
+          </div>
+          <div class="form-group mb-3 position-relative">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" required placeholder="Confirm password">
+            <div class="popup-info">Confirm your password</div>
+          </div>
+          <button type="submit" class="btn btn-danger w-100">Sign Up</button>
+        </form>
+        <p class="mt-3 text-center">Already have an account? <a href="/login">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<%- include('partials/footer') %>
+
+
+<link rel="stylesheet" href="/css/style.css">

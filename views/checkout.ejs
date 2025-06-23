@@ -1,0 +1,121 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h2 class="mb-4">Checkout</h2>
+
+  <% if(cart.length === 0) { %>
+    <div class="alert alert-info text-center">
+      Your cart is empty. <a href="/">Go back to shopping</a>
+    </div>
+  <% } else { %>
+    <form method="POST" action="/confirm-order">
+      <div class="mb-4">
+        <h5>Delivery Address</h5>
+        <% if(address) { %>
+          <div class="border border-success p-3 bg-light rounded">
+            <p>
+              <strong><%= address.name %></strong>
+              <span class="badge bg-success ms-2">Selected</span><br>
+              <%= address.address %>, <%= address.locality %><br>
+              <%= address.city %>, <%= address.state %> - <%= address.pincode %><br>
+              Phone: <%= address.phone %>
+              <% if(address.altPhone) { %><br>AltPhn: <%= address.altPhone %><% } %>
+              <% if(address.landmark) { %><br>Landmark: <%= address.landmark %><% } %>
+            </p>
+            <div class="d-flex gap-2 mt-2">
+              <a href="/edit-address/<%= address.id %>" class="btn btn-sm btn-outline-primary">Edit</a>
+              <a href="/profile?from=checkout" class="btn btn-sm btn-outline-secondary">Change</a>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="alert alert-warning">
+            No address found. Please <a href="/profile">add an address</a> before proceeding.
+          </div>
+        <% } %>
+      </div>
+
+      <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Book</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="cart-body">
+          <% let total = 0; %>
+          <% cart.forEach((item, index) => {
+              const discountedPrice = item.price * (1 - (item.discount || 0) / 100);
+              const subtotal = discountedPrice * item.quantity;
+              total += subtotal;
+          %>
+            <tr data-index="<%= index %>">
+              <td><%= item.title %></td>
+              <td>
+                <% if(item.discount && item.discount > 0) { %>
+                  <span class="text-decoration-line-through text-muted">₹<%= item.price.toFixed(2) %></span><br/>
+                  <span class="text-danger fw-bold price">₹<%= discountedPrice.toFixed(2) %></span><br/>
+                  <small class="text-success"><%= item.discount %>% off</small>
+                <% } else { %>
+                  <span class="price">₹<%= item.price.toFixed(2) %></span>
+                <% } %>
+              </td>
+              <td>
+                <input 
+                  type="number" 
+                  class="form-control quantity-input" 
+                  name="quantities[]" 
+                  value="<%= item.quantity %>" 
+                  min="1" 
+                  max="5"
+                  data-price="<%= discountedPrice.toFixed(2) %>"
+                />
+              </td>
+              <td class="subtotal">₹<%= subtotal.toFixed(2) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-end fw-bold">Total Amount</td>
+            <td class="fw-bold" id="total-amount">₹<%= total.toFixed(2) %></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <% if(address) { %>
+        <div class="d-flex justify-content-center mt-4">
+          <button type="submit" class="btn btn-success btn-lg">Confirm and Pay</button>
+        </div>
+      <% } else { %>
+        <p class="text-danger mt-3">Please update your address to proceed with checkout.</p>
+      <% } %>
+    </form>
+  <% } %>
+</div>
+
+<script>
+  document.querySelectorAll('.quantity-input').forEach(input => {
+    input.addEventListener('input', function () {
+      let row = this.closest('tr');
+      let price = parseFloat(this.dataset.price);
+      let quantity = Math.min(Math.max(parseInt(this.value) || 1, 1), 5); // clamp 1–5
+      this.value = quantity;
+
+      let subtotal = price * quantity;
+      row.querySelector('.subtotal').textContent = '₹' + subtotal.toFixed(2);
+
+      // Update total
+      let total = 0;
+      document.querySelectorAll('.quantity-input').forEach(i => {
+        let p = parseFloat(i.dataset.price);
+        let q = parseInt(i.value) || 1;
+        total += p * q;
+      });
+      document.getElementById('total-amount').textContent = '₹' + total.toFixed(2);
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>
